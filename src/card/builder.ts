@@ -246,8 +246,22 @@ export function formatFooterRuntimeSegments(params: {
 
   if (footer?.elapsed && elapsedMs != null) {
     const d = formatElapsed(elapsedMs);
-    primaryZh.push(`耗时 ${d}`);
+    primaryZh.push(d);
     primaryEn.push(`Elapsed ${d}`);
+  }
+
+  if (footer?.context && metrics) {
+    const freshTotal = metrics.totalTokensFresh === false ? undefined : metrics.totalTokens;
+    const total = typeof freshTotal === 'number' ? Math.max(0, freshTotal) : undefined;
+    const ctx = typeof metrics.contextTokens === 'number' ? Math.max(0, metrics.contextTokens) : undefined;
+    if (total != null && ctx != null) {
+      const totalLabel = compactNumber(total);
+      const ctxLabel = compactNumber(ctx);
+      const pct = ctx > 0 ? Math.round((total / ctx) * 100) : 0;
+      const pctLabel = `${pct}%`;
+      primaryZh.push(`${totalLabel}/${ctxLabel} (${pctLabel})`);
+      primaryEn.push(`${totalLabel}/${ctxLabel} (${pctLabel})`);
+    }
   }
 
   if (footer?.model && metrics?.model) {
@@ -280,22 +294,8 @@ export function formatFooterRuntimeSegments(params: {
       const hit = total > 0 ? Math.round((read / total) * 100) : 0;
       const left = compactNumber(read);
       const right = compactNumber(write);
-      detailZh.push(`缓存 ${left}/${right} (${hit}%)`);
-      detailEn.push(`Cache ${left}/${right} (${hit}%)`);
-    }
-  }
-
-  if (footer?.context && metrics) {
-    const freshTotal = metrics.totalTokensFresh === false ? undefined : metrics.totalTokens;
-    const total = typeof freshTotal === 'number' ? Math.max(0, freshTotal) : undefined;
-    const ctx = typeof metrics.contextTokens === 'number' ? Math.max(0, metrics.contextTokens) : undefined;
-    if (total != null && ctx != null) {
-      const totalLabel = compactNumber(total);
-      const ctxLabel = compactNumber(ctx);
-      const pct = ctx > 0 ? Math.round((total / ctx) * 100) : 0;
-      const pctLabel = `${pct}%`;
-      detailZh.push(`上下文 ${totalLabel}/${ctxLabel} (${pctLabel})`);
-      detailEn.push(`Context ${totalLabel}/${ctxLabel} (${pctLabel})`);
+      detailZh.push(`${left}/${right} (${hit}%)`);
+      detailEn.push(`${left}/${right} (${hit}%)`);
     }
   }
 

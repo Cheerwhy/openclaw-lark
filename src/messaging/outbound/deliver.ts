@@ -75,7 +75,7 @@ function prepareTextForLark(cfg: ClawdbotConfig, text: string, accountId?: strin
     // Runtime not available -- use the text as-is.
   }
 
-  return optimizeMarkdownStyle(processed, 1);
+  return optimizeMarkdownStyle(processed);
 }
 
 /**

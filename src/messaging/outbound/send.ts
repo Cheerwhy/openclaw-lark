@@ -129,7 +129,7 @@ export async function sendMessageFeishu(params: SendFeishuMessageParams): Promis
       processed = convertMarkdownTablesForFeishu(cfg, processed, accountId);
 
       // Apply Markdown style optimization.
-      processed = optimizeMarkdownStyle(processed, 1);
+      processed = optimizeMarkdownStyle(processed);
 
       postBody[locale] = {
         content: [[{ tag: 'md', text: processed }]],
@@ -149,7 +149,7 @@ export async function sendMessageFeishu(params: SendFeishuMessageParams): Promis
     messageText = convertMarkdownTablesForFeishu(cfg, messageText, accountId);
 
     // Apply Markdown style optimization.
-    messageText = optimizeMarkdownStyle(messageText, 1);
+    messageText = optimizeMarkdownStyle(messageText);
 
     contentPayload = JSON.stringify({
       zh_cn: {
